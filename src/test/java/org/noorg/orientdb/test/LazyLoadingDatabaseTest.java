@@ -3,6 +3,7 @@ package org.noorg.orientdb.test;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.noorg.orientdb.test.domain.Item;
@@ -16,23 +17,26 @@ public class LazyLoadingDatabaseTest {
 	@BeforeClass
 	public static void setup() throws IOException {
 		Database.setupDatabase();
-	}
 
-	@Test
-	public void testCreate() {
-		ItemRepository itemRepository = new ItemRepository();
-		Item item1 = itemRepository.createItem("foo");
-		Item item2 = itemRepository.createItem("bar");
-		Item item3 = itemRepository.createItem("baz");
+		// create first item container
+		ItemContainer container = new ItemContainer("container");
+		container.getItems().add(new Item("foo"));
+		container.getItems().add(new Item("bar"));
+		container.getItems().add(new Item("baz"));
 
-		ItemContainer container = itemRepository.createItemContainer("container");
-		container.getItems().add(item1);
-		container.getItems().add(item2);
-		container.getItems().add(item3);
-
-		// update container
 		ODatabaseObjectTx db = Database.get();
 		db.save(container);
+		db.close();
+
+		// create second item container with repository
+		ItemRepository itemRepository = new ItemRepository();
+		ItemContainer container2 = itemRepository.createItemContainer("container 2");
+		container2.getItems().add(itemRepository.createItem("a"));
+		container2.getItems().add(itemRepository.createItem("b"));
+		container2.getItems().add(itemRepository.createItem("c"));
+		
+		db = Database.get();
+		db.save(container2);
 		db.close();
 	}
 
@@ -40,20 +44,40 @@ public class LazyLoadingDatabaseTest {
 	public void testFind() {
 		ItemRepository itemRepository = new ItemRepository();
 		ItemContainer container = itemRepository.findItemContainerByTitle("container");
-		assert (container.getItems().size() == 3);
+		Assert.assertEquals(3, container.getItems().size());
+		for (Item i : container.getItems()) {
+			System.out.println("title: " + i.getTitle());
+		}
 	}
 
 	@Test
 	public void testManualFind() {
 		ODatabaseObjectTx db = Database.get();
-		List<ItemContainer> result = db.query(new OSQLSynchQuery<ItemContainer>("select from ItemContainer where title = 'container'").setFetchPlan("*:-1"));
-		db.close();
-
+		List<ItemContainer> result = db.query(new OSQLSynchQuery<ItemContainer>("select from ItemContainer where title = 'container'"));
 		for (ItemContainer c : result) {
 			for (Item i : c.getItems()) {
 				System.out.println("title: " + i.getTitle());
 			}
 		}
+		db.close();
+	}
+
+	@Test
+	public void testFind2() {
+		ItemRepository itemRepository = new ItemRepository();
+		ItemContainer container = itemRepository.findItemContainerByTitle("container 2");
+		Assert.assertEquals(3, container.getItems().size());
+		for (Item i : container.getItems()) {
+			System.out.println("title: " + i.getTitle());
+		}
+	}
+
+	@Test
+	public void testFindDuplicates() {
+		ODatabaseObjectTx db = Database.get();
+		List<ItemContainer> result = db.query(new OSQLSynchQuery<ItemContainer>("select from ItemContainer where title = 'container 2'"));
+		db.close();
+		Assert.assertEquals(1, result.size());
 	}
 
 }

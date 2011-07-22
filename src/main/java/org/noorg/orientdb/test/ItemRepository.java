@@ -28,7 +28,7 @@ public class ItemRepository {
 	
 	public ItemContainer findItemContainerByTitle(String title) {
 		ODatabaseObjectTx db = Database.get();
-		List<ItemContainer> list = db.query(new OSQLSynchQuery<ItemContainer>("select from ItemContainer where title = '" + title + "'"));
+		List<ItemContainer> list = db.query(new OSQLSynchQuery<ItemContainer>("select from ItemContainer where title = '" + title + "'").setFetchPlan("*:-1"));
 		db.close();
 		if (list.size() > 0) {
 			return list.get(0);
