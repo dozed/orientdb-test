@@ -29,7 +29,7 @@ public class LazyLoadingDatabaseTest {
 		db.save(container);
 		db.close();
 
-		// create second item container with repository
+		// create second item container
 		ItemContainer container2 = itemRepository.createItemContainer("container 2");
 		container2.getItems().add(itemRepository.createItem("a"));
 		container2.getItems().add(itemRepository.createItem("b"));
