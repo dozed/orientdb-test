@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.noorg.orientdb.test.domain.Item;
 import org.noorg.orientdb.test.domain.ItemContainer;
+import org.noorg.orientdb.test.domain.Page;
 
 import com.orientechnologies.orient.core.db.object.ODatabaseObjectPool;
 import com.orientechnologies.orient.core.db.object.ODatabaseObjectTx;
@@ -42,11 +43,13 @@ public class Database {
 		db.getEntityManager().registerEntityClasses("org.noorg.orientdb.test.domain");
 		db.getEntityManager().registerEntityClass(Item.class);
 		db.getEntityManager().registerEntityClass(ItemContainer.class);
+		db.getEntityManager().registerEntityClass(Page.class);
 	}
 	
 	private static void createClasses(ODatabaseObjectTx db) {
 		createClass(db, "Item");
 		createClass(db, "ItemContainer");
+		createClass(db, "Page");
 	}
 	
 	private static void createClass(ODatabaseObjectTx db, String className) {
