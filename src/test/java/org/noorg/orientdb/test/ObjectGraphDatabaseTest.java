@@ -17,7 +17,10 @@ public class ObjectGraphDatabaseTest {
 		Page root = new Page("root");
 		root.addPage(new Page("foo"));
 		root.addPage(new Page("bar"));
-		root.addPage(new Page("baz"));
+
+		Page baz = new Page("baz");
+		baz.addPage(new Page("nested"));
+		root.addPage(baz);
 		
 		repo.save(root);
 	}
@@ -26,9 +29,13 @@ public class ObjectGraphDatabaseTest {
 	public void test() {
 		Repository<Page> repo = Repository.get(Page.class);
 		Page root = repo.find("title", "root");
-
-		for (Page p : root.getSubPages()) {
-			System.out.println(p.getTitle());
+		goDown(root);
+	}
+	
+	private void goDown(Page page) {
+		System.out.println(page.getTitle());
+		for (Page p : page.getSubPages()) {
+			goDown(p);
 		}
 	}
 
