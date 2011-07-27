@@ -38,7 +38,7 @@ public class Repository<T> {
 		ODatabaseObjectTx db = Database.get();
 		List<T> result = new ArrayList<T>();
 		try {
-			result = db.query(new OSQLSynchQuery<T>("select from " + targetClass.getSimpleName() + " where " + key + " = '" + value + "'").setFetchPlan("subPages:-1"));
+			result = db.query(new OSQLSynchQuery<T>("select from " + targetClass.getSimpleName() + " where " + key + " = '" + value + "'").setFetchPlan("*:-1"));
 		} finally {
 			db.close();
 		}
