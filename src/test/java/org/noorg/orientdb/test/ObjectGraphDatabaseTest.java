@@ -29,13 +29,16 @@ public class ObjectGraphDatabaseTest {
 	public void test() {
 		Repository<Page> repo = Repository.get(Page.class);
 		Page root = repo.find("title", "root");
-		goDown(root);
+		goDown(root, 0);
 	}
 	
-	private void goDown(Page page) {
+	private void goDown(Page page, int level) {
+		for (int i = 0; i < level; i++ ) {
+			System.out.print("--");
+		}
 		System.out.println(page.getTitle());
 		for (Page p : page.getSubPages()) {
-			goDown(p);
+			goDown(p, level+1);
 		}
 	}
 
