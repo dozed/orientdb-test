@@ -20,6 +20,7 @@ public class Database {
 	public static ODatabaseObjectTx get() {
 		ODatabaseObjectTx db = ODatabaseObjectPool.global().acquire("local:target/orient", "admin", "admin");
 		registerClasses(db);
+		db.setSaveOnlyDirty(false);
 		return db;
 	}
 	
