@@ -14,7 +14,7 @@ public class Page {
 	
 	@Version
 	private Long version;
-	
+
 	private String uuid;
 
 	private String title;
