@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 public class Page {
-	
+
 	@Id
 	private Long id;
 	
@@ -76,5 +76,16 @@ public class Page {
 		}
 		return super.equals(obj);
 	}
+
+	@Override
+	public String toString() {
+		return title + "(id=" + id + ")";
+	}
+
+	public Long getId() {
+		return id;
+	}
+	
+	
 	
 }

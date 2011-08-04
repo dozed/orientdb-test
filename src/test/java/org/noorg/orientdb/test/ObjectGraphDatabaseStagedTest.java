@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.noorg.orientdb.test.domain.Page;
 
-public class ObjectGraphDatabaseTest2 {
+public class ObjectGraphDatabaseStagedTest {
 
 	@Test
 	public void stage1() throws IOException {
@@ -40,12 +40,12 @@ public class ObjectGraphDatabaseTest2 {
 	public void testFindAll() {
 		Repository<Page> repo = Repository.get(Page.class);
 		List<Page> pages = repo.findAll();
-		Assert.assertEquals(5, pages.size());
 		System.out.println("listing pages:");
 		for (Page page : pages) {
 			System.out.println(pages.indexOf(page) + ": " + page.getTitle());
 		}
 		System.out.println("done.");
+		Assert.assertEquals(5, pages.size());
 	}
 
 }
