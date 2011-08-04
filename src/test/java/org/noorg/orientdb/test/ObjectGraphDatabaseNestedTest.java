@@ -55,7 +55,7 @@ public class ObjectGraphDatabaseNestedTest {
 			System.out.println(page.getTitle() + "(id=" + page.getId() + ")");
 		}
 		System.out.println("done.");
-		Assert.assertEquals(5, pages.size());
+		Assert.assertEquals(6, pages.size());
 	}
 
 	@Test
