@@ -7,11 +7,13 @@ import java.util.UUID;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
+import com.google.common.collect.ImmutableList;
+
 public class Page {
 
 	@Id
 	private Long id;
-	
+
 	@Version
 	private Long version;
 
@@ -20,16 +22,17 @@ public class Page {
 	private String title;
 
 	private Page parentPage;
-	
+
 	private List<Page> subPages = new ArrayList<Page>();
-	
-	public Page() {}
+
+	public Page() {
+	}
 
 	public Page(String title) {
 		this.title = title;
 		this.uuid = UUID.randomUUID().toString();
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -47,45 +50,51 @@ public class Page {
 	}
 
 	public List<Page> getSubPages() {
-		return subPages;
-	}
-	
-	public void setSubPages(List<Page> subPages) {
-		this.subPages = subPages;
+		return ImmutableList.copyOf(subPages);
 	}
 
 	public Page getParentPage() {
 		return parentPage;
 	}
-	
+
 	public void addPage(Page page) {
 		if (!subPages.contains(page)) {
 			subPages.add(page);
 			page.setParentPage(this);
 		}
 	}
-	
-	public void setParentPage(Page parentPage) {
-		this.parentPage = parentPage;
+
+	protected void setParentPage(Page page) {
+		if (parentPage != null && parentPage != page) {
+			parentPage.removePage(this);
+		}
+		parentPage = page;
+	}
+
+	protected void removePage(Page page) {
+		subPages.remove(page);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Page) {
-			return ((Page)obj).getUuid().equals(this.getUuid());
+			return ((Page) obj).getUuid().equals(this.getUuid());
 		}
 		return super.equals(obj);
 	}
 
 	@Override
 	public String toString() {
-		return title + "(id=" + id + ")";
+		return this.getClass().getSimpleName() + "(id=" + this.getId() + ", title=" + this.getTitle() + ", parentPage="
+				+ (this.getParentPage() != null ? this.getParentPage().getId() : "null") + ")";
 	}
 
 	public Long getId() {
 		return id;
 	}
-	
-	
+
+	public Long getVersion() {
+		return version;
+	}
 	
 }

@@ -41,7 +41,7 @@ public class ObjectGraphDatabaseNestedTest {
 		Repository<Page> repo = Repository.get(Page.class);
 		
 		Page baz = repo.find("title", "baz");
-		baz.addPage(new Page("nested"));
+		baz.addPage(new Page("nested2"));
 		
 		repo.save(baz);
 	}
